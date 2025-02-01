@@ -143,6 +143,7 @@ function TaskForm({ onSubmit }: TaskFormProps) {
               difficulty: Number(task.difficulty),
               effort: Number(task.effort),
               impact: Number(task.impact),
+              status: "todo",
             });
           }}
         >

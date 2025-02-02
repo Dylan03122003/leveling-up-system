@@ -1,7 +1,7 @@
 import { AppContext, MySystemT } from "@/contexts/AppContext";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { calculateTaskXP } from "@/lib/calculateTaskXP";
-import { TaskStatusT, TaskT } from "@/types";
+import { RecentTaskT, TaskStatusT, TaskT } from "@/types";
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -12,12 +12,27 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     xp: 0,
     xpEarnedToday: 0,
     currentTasks: [],
+    recentTasks: [],
   });
 
   const addTask = (task: TaskT) => {
     setMySystem({
       ...mySytem,
       currentTasks: [...mySytem.currentTasks, task],
+    });
+  };
+
+  const addMultipleTasks = (tasks: TaskT[]) => {
+    setMySystem({
+      ...mySytem,
+      currentTasks: [...mySytem.currentTasks, ...tasks],
+    });
+  };
+
+  const addRecentTask = (task: RecentTaskT) => {
+    setMySystem({
+      ...mySytem,
+      recentTasks: [...mySytem.recentTasks, task],
     });
   };
 
@@ -29,6 +44,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setMySystem({
       ...mySytem,
       currentTasks: updatedTasks,
+    });
+  };
+
+  const deleteRecentTask = (taskId: number) => {
+    const updatedTasks = mySytem.recentTasks.filter(
+      (task) => task.id !== taskId
+    );
+
+    setMySystem({
+      ...mySytem,
+      recentTasks: updatedTasks,
     });
   };
 
@@ -72,7 +98,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   return (
     <AppContext.Provider
-      value={{ mySytem, addTask, markAsDone, clearAllTasks, deleteTask }}
+      value={{
+        mySytem,
+        addTask,
+        addMultipleTasks,
+        addRecentTask,
+        markAsDone,
+        clearAllTasks,
+        deleteTask,
+        deleteRecentTask,
+      }}
     >
       {children}
     </AppContext.Provider>

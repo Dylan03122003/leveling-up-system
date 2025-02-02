@@ -14,10 +14,12 @@ import TaskList from "./components/TaskList";
 import { getLevelProgress } from "./lib/getLevelProgress";
 import { Progress } from "./components/ui/progress";
 import { calculateXPneededForNextLevel } from "./lib/calculateXPneededForNextLevel";
+import RecentTaskList from "./components/RecentTaskList";
 
 function App() {
-  const { mySytem, addTask } = useAppContext();
+  const { mySytem, addTask, addRecentTask } = useAppContext();
   const [openCreateTask, setOpenCreateTask] = useState(false);
+  const [openRecentTasks, setOpenRecentTasks] = useState(false);
   const levelProgress = getLevelProgress(mySytem.xp);
   const xpNeededToLevelUp = calculateXPneededForNextLevel(mySytem.xp);
 
@@ -43,13 +45,23 @@ function App() {
               </p>
             </div>
           </div>
-          <Button
-            onClick={() => {
-              setOpenCreateTask(true);
-            }}
-          >
-            Create task
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={() => {
+                setOpenCreateTask(true);
+              }}
+            >
+              Create task
+            </Button>
+
+            <Button
+              onClick={() => {
+                setOpenRecentTasks(true);
+              }}
+            >
+              Recent tasks
+            </Button>
+          </div>
         </div>
 
         <div className="mt-5 w-[600px]">
@@ -89,6 +101,37 @@ function App() {
               setOpenCreateTask(false);
             }}
           />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={openRecentTasks}
+        onOpenChange={(isOpen) => {
+          setOpenRecentTasks(isOpen);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Recent tasks</DialogTitle>
+            <DialogDescription>
+              You're doing great! Keep it up!
+            </DialogDescription>
+          </DialogHeader>
+
+          <RecentTaskList tasks={mySytem.recentTasks} />
+          <div className="border-t mt-4 pt-4 border-gray-400">
+            <TaskForm
+              onSubmit={(task) => {
+                addRecentTask({
+                  id: Date.now(),
+                  name: task.name,
+                  difficulty: task.difficulty,
+                  effort: task.effort,
+                  impact: task.impact,
+                });
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </>

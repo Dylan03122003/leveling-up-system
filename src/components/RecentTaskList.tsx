@@ -26,7 +26,7 @@ function RecentTaskList({ tasks }: RecentTaskListProps) {
   }
 
   return (
-    <ul>
+    <ul className="max-h-[400px] overflow-y-auto">
       {tasks.map((task) => (
         <li
           key={task.id}
@@ -87,6 +87,7 @@ function RecentTaskList({ tasks }: RecentTaskListProps) {
               const tasks: TaskT[] = selectedTasks.map((task) => ({
                 ...task,
                 status: "todo",
+                id: Date.now() + Math.random(),
               }));
 
               addMultipleTasks(tasks);

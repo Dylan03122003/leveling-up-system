@@ -14,15 +14,19 @@ import { NewTaskT, TaskT } from "@/types";
 
 interface TaskFormProps {
   onSubmit: (task: TaskT | NewTaskT) => void;
+  defaultValues?: TaskT;
 }
 
-function TaskForm({ onSubmit }: TaskFormProps) {
-  const [task, setTask] = useState({
-    name: "",
-    effort: "",
-    impact: "",
-    difficulty: "",
-  });
+function TaskForm({ onSubmit, defaultValues }: TaskFormProps) {
+  const [task, setTask] = useState<TaskT | NewTaskT>(
+    defaultValues || {
+      status: "todo",
+      name: "",
+      difficulty: 0,
+      effort: 0,
+      impact: 0,
+    }
+  );
 
   return (
     <div>
@@ -38,8 +42,8 @@ function TaskForm({ onSubmit }: TaskFormProps) {
 
       <Label htmlFor="effort">Effort</Label>
       <Select
-        value={task.effort}
-        onValueChange={(value) => setTask({ ...task, effort: value })}
+        value={task.effort + ""} // convert to string
+        onValueChange={(value) => setTask({ ...task, effort: Number(value) })}
       >
         <SelectTrigger className="w-full mt-1">
           <SelectValue placeholder="Select your effort type" />
@@ -68,8 +72,8 @@ function TaskForm({ onSubmit }: TaskFormProps) {
 
       <Label htmlFor="impact">Impact</Label>
       <Select
-        value={task.impact}
-        onValueChange={(value) => setTask({ ...task, impact: value })}
+        value={task.impact + ""}
+        onValueChange={(value) => setTask({ ...task, impact: Number(value) })}
       >
         <SelectTrigger className="w-full mt-1">
           <SelectValue placeholder="Select your impact type" />
@@ -97,8 +101,10 @@ function TaskForm({ onSubmit }: TaskFormProps) {
 
       <Label htmlFor="difficulty">Difficulty</Label>
       <Select
-        value={task.difficulty}
-        onValueChange={(value) => setTask({ ...task, difficulty: value })}
+        value={task.difficulty + ""}
+        onValueChange={(value) =>
+          setTask({ ...task, difficulty: Number(value) })
+        }
       >
         <SelectTrigger className="w-full mt-1">
           <SelectValue placeholder="Select your difficulty type" />
@@ -138,6 +144,17 @@ function TaskForm({ onSubmit }: TaskFormProps) {
               return;
             }
 
+            if (defaultValues) {
+              onSubmit({
+                id: defaultValues.id,
+                name: task.name,
+                difficulty: Number(task.difficulty),
+                effort: Number(task.effort),
+                impact: Number(task.impact),
+                status: "todo",
+              });
+              return;
+            }
             onSubmit({
               name: task.name,
               difficulty: Number(task.difficulty),

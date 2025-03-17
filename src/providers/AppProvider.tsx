@@ -96,6 +96,20 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     });
   };
 
+  const updateTask = (task: TaskT) => {
+    const updatedTasks = mySytem.currentTasks.map((t) => {
+      if (t.id === task.id) {
+        return task;
+      }
+      return t;
+    });
+
+    setMySystem({
+      ...mySytem,
+      currentTasks: updatedTasks,
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -107,6 +121,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         clearAllTasks,
         deleteTask,
         deleteRecentTask,
+        updateTask,
       }}
     >
       {children}

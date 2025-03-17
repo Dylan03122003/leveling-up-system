@@ -13,15 +13,18 @@ import { useAppContext } from "@/hooks/useAppContext";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
+import TaskForm from "./TaskForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 interface TaskListProps {
   tasks: TaskT[];
 }
 
 function TaskList({ tasks }: TaskListProps) {
-  const { markAsDone, clearAllTasks, deleteTask } = useAppContext();
+  const { markAsDone, clearAllTasks, deleteTask, updateTask } = useAppContext();
   const [openConfirmClearAllTasks, setOpenConfirmClearAllTasks] =
     useState(false);
+  const [updatedTask, setUpdatedTask] = useState<TaskT>();
 
   // done tasks should be at the bottom
   tasks.sort((a) => {
@@ -33,6 +36,30 @@ function TaskList({ tasks }: TaskListProps) {
 
   return (
     <>
+      <Dialog
+        open={!!updatedTask}
+        onOpenChange={(open) => {
+          if (!open) {
+            setUpdatedTask(undefined);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update task</DialogTitle>
+          </DialogHeader>
+
+          <TaskForm
+            defaultValues={updatedTask}
+            onSubmit={(task) => {
+              console.log("task", task);
+              updateTask(task as TaskT);
+              setUpdatedTask(undefined);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
       <div className="w-[600px]">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl mb-4">Current Tasks</h1>
@@ -42,9 +69,9 @@ function TaskList({ tasks }: TaskListProps) {
           </Button>
         </div>
         <ul>
-          {tasks.map((task) => (
+          {tasks.map((task, index) => (
             <li
-              key={task.id}
+              key={index}
               className={`flex justify-between items-center ${
                 task.status === "done"
                   ? "bg-green-50 border-green-200"
@@ -75,7 +102,13 @@ function TaskList({ tasks }: TaskListProps) {
                   >
                     Done
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Update</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setUpdatedTask(task);
+                    }}
+                  >
+                    Update
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       deleteTask(task.id);

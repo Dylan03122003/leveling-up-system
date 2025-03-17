@@ -13,6 +13,7 @@ export type AppContextType = {
   addTask: (task: TaskT) => void;
   addMultipleTasks: (tasks: TaskT[]) => void;
   addRecentTask: (task: RecentTaskT) => void;
+  updateTask: (task: TaskT) => void;
   markAsDone: (taskId: number) => void;
   clearAllTasks: () => void;
   deleteTask: (taskId: number) => void;

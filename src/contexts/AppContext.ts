@@ -25,6 +25,7 @@ export type AppContextType = {
   markDailyQuestTaskAsDone: (questId: number, taskId: number) => void;
   deleteTaskOfDailyQuest: (questId: number, taskId: number) => void;
   resetAllTasksOfAllDailyQuests: () => void;
+  completeAllTasksOfDailyQuest: (questId: number) => void;
 };
 
 export const AppContext = createContext<AppContextType | null>(null);

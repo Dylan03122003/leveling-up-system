@@ -46,6 +46,7 @@ function DailyQuestDetails({ quest }: DailyQuestDetailsProps) {
     renameDailyQuest,
     markDailyQuestTaskAsDone,
     deleteTaskOfDailyQuest,
+    completeAllTasksOfDailyQuest,
   } = useAppContext();
 
   // Calculate completion percentage
@@ -121,6 +122,15 @@ function DailyQuestDetails({ quest }: DailyQuestDetailsProps) {
                 >
                   <Edit2 className="mr-2 h-4 w-4 text-blue-600" />
                   Rename
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="flex items-center cursor-pointer"
+                  onClick={() => {
+                    completeAllTasksOfDailyQuest(quest.id);
+                  }}
+                >
+                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-500 " />
+                  Completed all
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

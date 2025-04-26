@@ -16,6 +16,30 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     dailyQuests: [],
   });
 
+  const completeAllTasksOfDailyQuest = (questId: number) => {
+    setMySystem((prev) => {
+      const quest = prev.dailyQuests.find((q) => q.id === questId);
+      if (!quest) {
+        console.warn(`Daily quest ${questId} not found`);
+        return prev;
+      }
+
+      const updatedDailyQuests = prev.dailyQuests.map((q) =>
+        q.id === questId
+          ? {
+              ...q,
+              tasks: q.tasks.map((t) => ({ ...t, status: "done" as const })),
+            }
+          : q
+      );
+
+      return {
+        ...prev,
+        dailyQuests: updatedDailyQuests,
+      };
+    });
+  };
+
   const resetAllTasksOfAllDailyQuests = () => {
     const updatedQuests = mySytem.dailyQuests.map((quest) => {
       const updatedTasks = quest.tasks.map((task) => {
@@ -203,6 +227,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        completeAllTasksOfDailyQuest,
         resetAllTasksOfAllDailyQuests,
         deleteTaskOfDailyQuest,
         markDailyQuestTaskAsDone,

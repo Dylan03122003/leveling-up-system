@@ -1,9 +1,16 @@
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 interface ConfirmModalProps {
   title: string;
   openModal: boolean;
+  description: string;
   onOpenChange: (isOpen: boolean) => void;
   onConfirm: () => void;
   onCancel: () => void;
@@ -12,6 +19,7 @@ interface ConfirmModalProps {
 function ConfirmModal({
   title,
   openModal,
+  description,
   onOpenChange,
   onConfirm,
   onCancel,
@@ -21,7 +29,7 @@ function ConfirmModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          {/* <DialogDescription></DialogDescription> */}
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
         <div className="flex justify-end gap-2 mt-2">

@@ -12,3 +12,9 @@ export type TaskStatusT = "todo" | "done";
 export type NewTaskT = Omit<TaskT, "id">;
 
 export type RecentTaskT = Omit<TaskT, "status">;
+
+export type DailyQuestT = {
+  id: number;
+  title: string;
+  tasks: TaskT[];
+};

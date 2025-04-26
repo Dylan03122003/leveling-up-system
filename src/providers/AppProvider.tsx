@@ -13,7 +13,97 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     xpEarnedToday: 0,
     currentTasks: [],
     recentTasks: [],
+    dailyQuests: [],
   });
+
+  const resetAllTasksOfAllDailyQuests = () => {
+    const updatedQuests = mySytem.dailyQuests.map((quest) => {
+      const updatedTasks = quest.tasks.map((task) => {
+        return { ...task, status: "todo" as TaskStatusT };
+      });
+      return { ...quest, tasks: updatedTasks };
+    });
+
+    setMySystem({
+      ...mySytem,
+      dailyQuests: updatedQuests,
+    });
+  };
+
+  const deleteTaskOfDailyQuest = (questId: number, taskId: number) => {
+    const updatedQuests = mySytem.dailyQuests.map((quest) => {
+      if (quest.id === questId) {
+        const updatedTasks = quest.tasks.filter((task) => task.id !== taskId);
+        return { ...quest, tasks: updatedTasks };
+      }
+      return quest;
+    });
+
+    setMySystem({
+      ...mySytem,
+      dailyQuests: updatedQuests,
+    });
+  };
+  const markDailyQuestTaskAsDone = (questId: number, taskId: number) => {
+    const updatedQuests = mySytem.dailyQuests.map((quest) => {
+      if (quest.id === questId) {
+        const updatedTasks = quest.tasks.map((task) => {
+          if (task.id === taskId) {
+            return { ...task, status: "done" as TaskStatusT };
+          }
+          return task;
+        });
+        return { ...quest, tasks: updatedTasks };
+      }
+      return quest;
+    });
+
+    setMySystem({
+      ...mySytem,
+      dailyQuests: updatedQuests,
+    });
+  };
+
+  const renameDailyQuest = (questId: number, newTitle: string) => {
+    const updatedQuests = mySytem.dailyQuests.map((quest) => {
+      if (quest.id === questId) {
+        return { ...quest, title: newTitle };
+      }
+      return quest;
+    });
+
+    setMySystem({
+      ...mySytem,
+      dailyQuests: updatedQuests,
+    });
+  };
+
+  const addTaskToDailyQuest = (questId: number, task: TaskT) => {
+    const updatedQuests = mySytem.dailyQuests.map((quest) => {
+      if (quest.id === questId) {
+        return { ...quest, tasks: [...quest.tasks, task] };
+      }
+      return quest;
+    });
+
+    setMySystem({
+      ...mySytem,
+      dailyQuests: updatedQuests,
+    });
+  };
+
+  const addDailyQuest = (title: string) => {
+    const newQuest = {
+      id: Date.now(),
+      title,
+      tasks: [],
+    };
+
+    setMySystem({
+      ...mySytem,
+      dailyQuests: [...mySytem.dailyQuests, newQuest],
+    });
+  };
 
   const addTask = (task: TaskT) => {
     setMySystem({
@@ -113,6 +203,12 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <AppContext.Provider
       value={{
+        resetAllTasksOfAllDailyQuests,
+        deleteTaskOfDailyQuest,
+        markDailyQuestTaskAsDone,
+        renameDailyQuest,
+        addTaskToDailyQuest,
+        addDailyQuest,
         mySytem,
         addTask,
         addMultipleTasks,
